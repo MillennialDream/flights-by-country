@@ -1,14 +1,12 @@
 from fastapi import FastAPI
+from typing import List
+
+from api.model import CountryFlightData
 
 ### Create FastAPI instance with custom docs and openapi url
-app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
+app = FastAPI(docs_url="/api/docs", openapi_url="/api/openapi.json")
 
-@app.get("/api/helloFastApi")
-def hello_fast_api():
-    return {"message": "Hello from FastAPI"}
-
-
-@app.get("/api/arrivals/{iata_code}")
+@app.get("/api/arrivals/{iata_code}", response_model=List[CountryFlightData])
 async def get_arrivals(iata_code: str):
     """
     Endpoint to get arrivals for a specific iata code.
@@ -16,11 +14,10 @@ async def get_arrivals(iata_code: str):
     :return: List of countries with number of arrivals today for the target Airport
     """
 
-    # Convert the dictionary to a list of CountryFlightData
     result = [
-        {"country": "Thailand", "flights": "4" },
-        {"country": "Cambodia", "flights": "2" },
-        {"country": "Brunei", "flights": "1" },
+        CountryFlightData(country="Thailand", flights="4"),
+        CountryFlightData(country="Cambodia", flights="2"),
+        CountryFlightData(country="Brunei", flights="1"),
     ]
 
     return result
